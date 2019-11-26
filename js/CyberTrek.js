@@ -12,8 +12,7 @@ class FillSpaceCanvas{
 }
 
 const SUN_OPTS = {
-    sliceCount: 8,
-    // largestSlice: 0.20
+    slicePerc: .9
 };
 
 // 8 = .25
@@ -52,35 +51,35 @@ class Sun{
 
         this.slices = this.slices.map((s, ind)=>{
             if(s.startY <= -1) return null;
-            let perc = ((this.opt.sliceCount-1)/this.opt.sliceCount);
+            let perc = this.opt.slicePerc;
 
-            let start = s.startY <= -1 ? this.radius * 2.5 * perc*perc : s.startY - (s.startY+(this.radius/4))/(this.radius);
+            let start = s.startY <= -1 ? this.radius * 2.8 * perc*perc : s.startY - (s.startY+(this.radius/5))/(this.radius);
             return {
                 startY: start,
-                height: 4 * Math.pow(start, 1/2)
+                // height: 4 * Math.pow(start, 1/2)
+                height: 1/2.8 * start
             };
         });
 
-        if(this.slices.length < this.opt.sliceCount){
-            let perc = ((this.opt.sliceCount-1)/this.opt.sliceCount);
+        let perc = this.opt.slicePerc;
 
-            let start = this.radius * 2.5 * perc*perc;
-            let height = 4 * Math.pow(start, 1/2);
+        let start = this.radius * 2.8 * perc*perc;
+        // let height = 4 * Math.pow(start, 1/2);
+        let height = 1/2.8 * start;
 
-            let cont = true;
+        let cont = true;
 
-            this.slices.forEach(s=>{
-                if(s.startY+(4 * Math.pow(s.startY, 1/2))+(this.radius/4) >= start){
-                    cont = false;
-                }
-            })
+        this.slices.forEach(s=>{
+            if(s.startY+(4 * Math.pow(s.startY, 1/2))+(this.radius/4) >= start){
+                cont = false;
+            }
+        })
 
-            if(!cont) return;
-            this.slices.push({
-                startY: start,
-                height: height
-            });
-        }
+        if(!cont) return;
+        this.slices.push({
+            startY: start,
+            height: height
+        });
 
         // this.slices = this.slices.map(s=>{
         //     return {
