@@ -15,10 +15,6 @@ const SUN_OPTS = {
     slicePerc: .9
 };
 
-// 8 = .25
-
-// 10 = .2
-
 class Sun{
     constructor(parent, x, y, radius, opt = SUN_OPTS){
         this.ctx = parent.ctx;
@@ -41,7 +37,8 @@ class Sun{
     }
 
     update(delta){
-        // Need a clever solution for reducing the size and raising the slices
+		// Need a clever solution for reducing the size and raising the slices
+		// console.log(delta);
 
         this.slices = this.slices.filter(s=>{
             if(s.startY <= -1) return false;
@@ -118,30 +115,28 @@ class CyberTrek extends FillSpaceCanvas{
         super(canvas);
         this.ctx = this.canvas.getContext('2d');
         this.delta = 0;
-        this.lastUpdate = performance.now();
-
-
-
-        // This clipping can be used to do exactly what I want
-        // Clip a rectangular area
-        // this.ctx.fillStyle = "pink";
-        // this.ctx.fillRect(0, 0, 1000, 1000);
-
-        // this.ctx.rect(0, 0, 100, 100);
-        // this.ctx.rect(100, 100, 100, 100);
-
-        // this.ctx.clip();
-        // // Draw red rectangle after clip()
-        // this.ctx.fillStyle = "red";
-        // this.ctx.fillRect(0, 0, 1000, 1000);
+		this.lastUpdate = performance.now();
+		this.hidden = false;
 
         this.sun = new Sun(this, 250, 250, 200);
 
-        this.render();
+		this.render();
+		
+		document.addEventListener("visibilitychange", this.onVisChange.bind(this));
     }
-    
+	
+	onVisChange(e){
+		this.hidden = true;
+	}
+	
     render(){
-        this.delta = (performance.now() - this.lastUpdate)/1000;
+		this.delta = (performance.now() - this.lastUpdate)/1000;
+		
+		if(this.hidden){
+			this.hidden = false;
+			this.delta = 0;
+			console.log('hidden');
+		}
 
         this.ctx.clearRect(0,0, 500, 500);
         
