@@ -40,8 +40,7 @@ class Sun{
         // }
     }
 
-    update(){
-
+    update(delta){
         // Need a clever solution for reducing the size and raising the slices
 
         this.slices = this.slices.filter(s=>{
@@ -53,7 +52,7 @@ class Sun{
             if(s.startY <= -1) return null;
             let perc = this.opt.slicePerc;
 
-            let start = s.startY <= -1 ? this.radius * 2.8 * perc*perc : s.startY - (s.startY+(this.radius/5))/(this.radius);
+            let start = s.startY <= -1 ? this.radius * 2.8 * perc*perc : s.startY - ((s.startY+(this.radius/6*.006))/(this.radius) * delta * (1000/6));
             return {
                 startY: start,
                 // height: 4 * Math.pow(start, 1/2)
@@ -142,11 +141,11 @@ class CyberTrek extends FillSpaceCanvas{
     }
     
     render(){
-        this.delta = performance.now() - this.lastUpdate;
+        this.delta = (performance.now() - this.lastUpdate)/1000;
 
         this.ctx.clearRect(0,0, 500, 500);
         
-        this.sun.update();
+        this.sun.update(this.delta);
 
         this.sun.draw();
 
